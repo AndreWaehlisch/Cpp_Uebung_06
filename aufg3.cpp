@@ -27,8 +27,6 @@ int main()
 	// startwert, step size, f(min), func: coords of minimum
 	VecDoub ergebnis;
 
-	//remove me
-
 	try
 	{
 		ergebnis = testSystem.minimize( start, del, fmin, testFunktion );
