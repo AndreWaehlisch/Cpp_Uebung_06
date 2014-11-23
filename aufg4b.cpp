@@ -1,12 +1,15 @@
 #include <iostream>
 #include <cmath>
 #include <fstream>
+#include <ctime>
 #include "anneal.h"
 using namespace std;
 
-int
-main ()
+int main ()
 {
+	// Laufzeit des Kompletten Programms messen
+	clock_t c1 = clock();
+
 	Ran myRand;
 
 	for (int stadt = 0; stadt < 3; stadt++)
@@ -74,8 +77,19 @@ main ()
 
 			// Datei schließen
 			file.close ();
+
+			cout << "[Ergebnis für N=1000 in die Datei 'test.txt' geschrieben.]" << endl;
 		}
 
-		cout << "Ergebnis in test.txt geschrieben. Länge der Reise: " << length << endl;
+		cout << "Anzahl der Städte: " << size << " Länge der Reise: " << length << endl;
 	}
+
+	clock_t c2 = clock();
+
+	cout << "Laufzeit des Programms: " << (c2 - c1) / double(CLOCKS_PER_SEC) << " secs" << endl;
+	// Laufzeit mit -O3 flag: ca. 11s
+	// Laufzeit mit -O2 flag: ca. 12s
+	// Laufzeit mit -O1 flag: ca. 12s
+	// Laufzeit ohne -O flag: ca. 23s
+	// Ergebnis: Die Optimierung des Compilers kann in diesem Fall die Laufzeit um bis zu ca. 50% reduzieren!
 }

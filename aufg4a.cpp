@@ -4,8 +4,7 @@
 #include "anneal.h"
 using namespace std;
 
-int
-main ()
+int main ()
 {
 	// (Später optimierte) Reihenfolge der Städte
 	VecInt r (8);

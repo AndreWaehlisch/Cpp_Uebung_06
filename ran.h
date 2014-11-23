@@ -13,18 +13,18 @@
 class Ran
 {
 	public:
-		Ran (void)
+		Ran(void)
 		{
-			srand ((unsigned) time (NULL));
+			srand((unsigned)time(NULL));
 		}
 
-//      Return a random number in the interval [0,1]
-		inline double doub ()
+// 	Return a random number in the interval [0,1]
+		inline double doub()
 		{
-			return double (rand ()) / double (RAND_MAX);
+			return double(rand()) / double(RAND_MAX);
 		}
 
-//      Return a random number in the interval [a,b]
+//	Return a random number in the interval [a,b]
 		inline double doub (const double a, const double b)
 		{
 			const double result = (doub () * (b - a)) + a;
