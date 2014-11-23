@@ -1,75 +1,46 @@
 #include <iostream>
 #include <cmath>
-#include "helfer.h"
-#include "minimization.h"
-
-
+#include "amoeba.h"
 using namespace std;
 
-class F
+// Funktion deren Minimum bestmimt werden soll
+double testFunktion(const VecDoub v)
 {
-  double p, q, v, w;
-public:
+	return (-exp( -(v[0] * v[0] + v[1] * v[1]) ) * exp( 4 * v[0] + 6 * v[1] - 13 ));
+}
 
-    F (const double pi, const double qi, const double vi, const double wi)
-  {
-    p = pi;
-    q = qi;
-    v = vi;
-    w = wi;
-  }
-
-  double operator  () (const double x)
-  {
-    return exp (-(x - p) * (x - p) / v) + exp (-(x + q) * (x + q) / w);
-  }
-
-  double df (const double x)
-  {
-    return -2 * (x - p) / v * exp (-(x - p) * (x - p) / v) - 2 * (x + q) / w * exp (-(x + q) * (x + q) / w);
-  }
-
-};
-
-
-
-int
-main ()
+int main()
 {
-  int steps;
+	// Startwerte
+	const double startwerte[2] = { 40, -2 };
+	VecDoub start(2, startwerte);
 
-  double a = -.25, b = .25, c;
-  double x, y;
-  Bracketmethod br;
-  Golden golden;
-  Brent brent;
-  DBrent dbrent;
+	// initial step size
+	const double del = 10000;
 
+	// function value at minimum
+	double fmin;
 
+	// Amoeben-Testsystem (dieses Objekt enthält die Minimalisierungs-Funktion)
+	Amoeba testSystem;
 
+	// startwert, step size, f(min), func: coords of minimum
+	VecDoub ergebnis;
 
-  F f (1, 2, 100, 1);
+	try
+	{
+		ergebnis = testSystem.minimize( start, del, fmin, testFunktion );
+	}
+	catch ( const char * e )
+	{
+		cout << "ERROR: '" << e << "'" << endl;
+		exit(1);
+	}
 
+	cout << "Minimum gefunden bei folgenden Koordinaten:" << endl;
+	cout << "x1=" << ergebnis[0] << " x2=" << ergebnis[1] << endl;
+	cout << "Die Test-Funktion hat an dieser Stelle folgenden Funktionswert:" << endl;
+	cout << "f(x1, x2)=" << fmin << endl;
 
-  br.bracket (a, b, c, f);
-
-  cout << "Bracketing: a = " << a << "  b = " << b << "  c = " << c << endl;
-
-  golden.set (a, b, c);
-  brent.set (a, b, c);
-  dbrent.set (a, b, c);
-
-  steps = golden.minimize (x, y, f);
-
-  cout << "\nMethod\tSteps\tx_min\t\tf(x_min)" << endl;
-  cout << "Golden\t" << steps << "\t" << x << "\t" << y << "\t" << endl;
-
-  steps = brent.minimize (x, y, f);
-
-  cout << "Brent\t" << steps << "\t" << x << "\t" << y << "\t" << endl;
-
-  steps = dbrent.minimize (x, y, f);
-
-  cout << "DBrent\t" << steps << "\t" << x << "\t" << y << "\t" << endl;
-
+	// Das gesuchte Minimum bei (2,3) wird nicht mehr gefunden, sobald die Startwerte zu weit vom Minimum entfernt sind und die Schrittweite (del) zu klein gewählt ist. Beispielsweise findet der Algorithmus für die Startwerte (8,-2) und einer Schrittweite 0.1 nicht das Minimum (da der Gradient an dieser Stelle quasi Null ist). Für die selben Startwerte mit Schrittweite 1.0 wird die Lösung wieder erreicht.
 }
